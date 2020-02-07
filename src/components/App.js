@@ -1,11 +1,46 @@
 import React from "react";
 import SearchBar from "./SearchBar";
+import youtubeAPI from "../api/youtubeAPI";
+import VideoList from "./video-list";
+import VideoDetail from "./VideoDetail";
 
 class App extends React.Component {
+  state = { videos: [], selectedVideo: null };
+
+  onTermSubmit = async term => {
+    const response = await youtubeAPI(term);
+
+    this.setState({
+      videos: response.items,
+      selectedVideo: response.items[0]
+    });
+  };
+
+  onVideoSelect = video => {
+    this.setState({ selectedVideo: video });
+  };
+
+  componentDidMount() {
+    this.onTermSubmit("nfl replay");
+  }
+
   render() {
     return (
       <div className="ui container">
-        <SearchBar />
+        <SearchBar onFormSubmit={this.onTermSubmit} />
+        <div className="ui grid">
+          <div className="ui row">
+            <div className="eleven wide column">
+              <VideoDetail video={this.state.selectedVideo} />
+            </div>
+            <div className="five wide column">
+              <VideoList
+                onVideoSelect={this.onVideoSelect}
+                videos={this.state.videos}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
