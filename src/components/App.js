@@ -21,7 +21,7 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    this.onTermSubmit("nfl replay");
+    this.onTermSubmit("web dev 2020");
   }
 
   render() {
